@@ -1,0 +1,37 @@
+####################
+### SERVER START ###
+####################
+%KAFKA_HOME%\bin\windows\zookeeper-server-start.bat %KAFKA_HOME%\config\zookeeper.properties
+%KAFKA_HOME%\bin\windows\kafka-server-start.bat %KAFKA_HOME%\config\server.properties
+
+
+#######################
+### CREAZIONE TOPIC ###
+#######################
+%KAFKA_HOME%\bin\windows\kafka-topics.bat --create --topic aq-api-ingestion-topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+%KAFKA_HOME%\bin\windows\kafka-topics.bat --create --topic cities-infos-topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+
+
+#####################################
+### CREAZIONE PRODUCER E CONSUMER ###
+#####################################
+
+### PRODUCER
+%KAFKA_HOME%\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic aq-api-ingestion-topic
+%KAFKA_HOME%\bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic cities-infos-topic
+
+### CONSUMER
+%KAFKA_HOME%\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic aq-api-ingestion-topic --from-beginning
+%KAFKA_HOME%\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic cities-infos-topic --from-beginning
+
+
+##########################
+### MOSTRA LISTA TOPIC ###
+##########################
+%KAFKA_HOME%\bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092
+
+
+######################
+### CANCELLA TOPIC ###
+######################
+%KAFKA_HOME%\bin\windows\kafka-topics.bat --delete --topic ingestion-topic --bootstrap-server localhost:9092

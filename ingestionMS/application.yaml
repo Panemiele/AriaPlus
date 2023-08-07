@@ -1,0 +1,11 @@
+static-topic-name: 'static-ingestion-topic'
+
+spark:
+  streaming:
+    neo4j:
+      format: "org.neo4j.spark.DataSource"
+      url: "bolt://localhost:7687"
+    hdfs:
+      url: "hdfs://localhost:9870"
+      save-mode: "ErrorIfExists"
+      checkpoint-location: "/tmp/checkpoint/streamingCheckpoint"
