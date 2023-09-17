@@ -20,6 +20,7 @@
         <kafka.version>3.5.1</kafka.version>
         <lombok.version>1.18.28</lombok.version>
         <json.version>20230618</json.version>
+        <springdoc.version>1.6.15</springdoc.version>
     </properties>
 
 
@@ -31,6 +32,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>

@@ -8,7 +8,7 @@ from kafka import KafkaProducer
 # Instantiate the kafka producer
 kafka_host_port = "localhost:9092"
 topic_name = "aq-api-ingestion-topic"
-base_url = 'https://api.openaq.org/v2/latest'
+base_url = 'https://api.openaq.org/v1/latest'
 
 
 #####################
@@ -30,7 +30,7 @@ def connect_kafka_producer(host_port):
 def get_air_quality():
     parameters = {
         # 'country': airQualityProps['parameters']['country'],
-        # 'limit': 4000
+        'limit': 4000
     }
     response = requests.get(base_url, params=parameters)
     if response.status_code == 200:
@@ -51,6 +51,8 @@ producer = connect_kafka_producer(kafka_host_port)
 # Schedule the get_air_quality method to run every 30 minutes
 schedule.every(30).minutes.do(get_air_quality)
 get_air_quality()
+
+# Used to run the application every 30 minutes
 while True:
     schedule.run_pending()
     time.sleep(1)
