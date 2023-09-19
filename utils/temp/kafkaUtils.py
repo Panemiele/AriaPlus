@@ -3,7 +3,7 @@
 import json
 from kafka import KafkaProducer, KafkaConsumer
 
-from utils.sparkUtils import publishInKafkaViaSparkStreaming, getKafkaSubscriberDF
+from utils.temp.sparkUtils import publishInKafkaViaSparkStreaming, getKafkaSubscriberDF
 
 
 #####################
