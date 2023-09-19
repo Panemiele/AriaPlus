@@ -41,6 +41,7 @@ async def main():
     if os.path.exists(new_lat_lon_file_path):
         os.remove(new_lat_lon_file_path)
 
+    data = pd.read_excel("quì ci va il percorso del file, MI RACCOMANDO FRA I DOPPI APICI")
     lat_lon_csv = pd.read_csv(base_lat_lon_file_path)
     lat_lon_csv["city"] = None
 
