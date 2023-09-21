@@ -8,7 +8,8 @@ Utilizzando un'architettura a Data Fabric, il progetto mira ad integrare dati pr
 - Kafka
 - Spark
 - Python
-- Java
+- Java 11+
+- (Opzionale) Postman
 
 
 <br><br><br><br>
@@ -75,6 +76,8 @@ E' possibile creare dei Producer e Consumer per testare il corretto funzionament
 <br><br><br><br>
 
 ### 3) Avviare l'istanza di Neo4j
+Prima di procedere col prossimo step è necessario avviare un'istanza di Neo4j: https://neo4j.com/
+Fatto ciò, sarà necessario cambiare i puntamenti a Neo4j all'interno di **streamingIngestionUtil.py**.
 
 <br><br><br><br>
 
@@ -117,4 +120,6 @@ Dove:
 
 <br><br><br><br>
 
-### 7) Contattare l'endpoint d
+### 7) Contattare l'endpoint di CityMSApplication
+Come ultimo passaggio, è necessario contattare l'endpoint di CityMSApplication per attivare il servizio di estrazione dati dal dataset **worldcities.csv** che processerà ed invierà i dati alla topic Kafka.
+Per farlo è possibile utilizzare (o importare su **Postman**) la seguente curl: **curl --location --request POST 'http://localhost:8080/send-cities'**
