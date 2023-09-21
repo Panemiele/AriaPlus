@@ -11,7 +11,7 @@ Utilizzando un'architettura a Data Fabric, il progetto mira ad integrare dati pr
 - Java
 
 
-<br><br><br>
+<br><br><br><br>
 
 
 ### 1) Avviare Zookeeper e Kafka
@@ -26,7 +26,7 @@ Per avviare i server Zookeeper e Kafka è necessario lanciare questi due comandi
 2) **Server Kafka**: %KAFKA_HOME%\bin\windows\kafka-server-start.bat %KAFKA_HOME%\config\server.properties
 
 
-<br><br><br>
+<br><br><br><br>
 
 
 ### 2) Creare topic Kafka
@@ -72,8 +72,49 @@ E' possibile creare dei Producer e Consumer per testare il corretto funzionament
   - %KAFKA_HOME%\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic aq-api-ingestion-topic --from-beginning
   - %KAFKA_HOME%\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic cities-infos-topic --from-beginning
 
-<br><br><br>
+<br><br><br><br>
 
-### 3) Avviare streamingIngestionUtil.py via PySpark
+### 3) Avviare l'istanza di Neo4j
 
-### Avviare OpenAQ.py
+<br><br><br><br>
+
+### 4) Avviare streamingIngestionUtil.py via PySpark
+Il passo successivo è quello di avviare **streamingIngestionUtil.py**, lo script Python in ascolto sulle topic Kafka che, tramite **Spark Structured Streaming**, scoda i messaggi, li processa e li instrada verso la Console, **Hadoop** e/o **Neo4j**.
+Per farlo, è possibile seguire i seguenti due approcci:
+  - Approccio Spark Submit
+    1) Aprire una nuova finestra del terminale
+    2) navigare fino alla cartella $SPARK_HOME/bin
+    3) modificare e lanciare il comando: **spark-submit --master _<local[numeroThread] / yarn>_ <_pathAriaPlus_>/ingestionMS/streamingIngestionUtil.py --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1,org.neo4j:neo4j-connector-apache-spark_2.12:5.0.1_for_spark_3**
+
+    Dove:
+    - <local[numeroThread] / yarn> := il master URL per il cluster
+    - [numeroThread] := numero di thread da utilizzare per esecuzione in locale (per prestazioni migliori)
+    - <_pathAriaPlus_> := il path della cartella "/AriaPlus" all'interno del file system della macchina
+<br>
+
+  - Approccio PySpark
+    1) Aprire una nuova finestra del terminale
+    2) navigare fino alla cartella $SPARK_HOME/bin
+    3) lanciare il comando: **pyspark --master local[8] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1,org.neo4j:neo4j-connector-apache-spark_2.12:5.0.1_for_spark_3**
+    4) copiare l'intero codice 
+
+<br><br><br><br>
+
+### 5) Avviare OpenAQ.py
+Avviato lo script di ingestion, è possibile avviare lo script per estrarre i dati della qulità dell'aria: OpenAQ.py .
+Per farlo, basta seguire la stessa guida del passo precedente, adattandola a **OpenAQ.py** anziché a **streamingIngestionUtil.py**.
+
+<br><br><br><br>
+
+### 6) Avviare CityMSApplication
+Uno degli ultimi passi da compiere è quello di avviare la Spring boot app **CityMSApplication**; per farlo è necessario seguire i seguenti step:
+  - Eseguire una build del progetto via **Maven**
+  - Aprire una finestra del terminale
+  - lanciare il comando: **java -jar <_pathAriaPlus_>/cityMS/target/cityMS-0.0.1-SNAPSHOT.jar**
+    
+Dove:
+- <_pathAriaPlus_> := il path della cartella "/AriaPlus" all'interno del file system della macchina
+
+<br><br><br><br>
+
+### 7) Contattare l'endpoint d
