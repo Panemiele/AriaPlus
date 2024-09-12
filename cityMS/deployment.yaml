@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: cityms-server
+   namespace: default
+spec:
+   replicas: 1
+   selector:
+      matchLabels:
+         cityMS: web
+   template:
+      metadata:
+         labels:
+            cityMS: web
+      spec:
+         containers:
+            - name: cityms-server
+              image: panemiele98/cityms-server:1.0
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: cityms-server-entrypoint
+   namespace: default
+spec:
+   type: NodePort
+   selector:
+      cityMS: web
+   ports:
+      - port: 3000
+        targetPort: 3000
+        nodePort: 30001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-server
+  namespace: kube-system
+  labels:
+    k8s-app: metrics-server
+spec:
+  selector:
+    matchLabels:
+      k8s-app: metrics-server
+  template:
+    metadata:
+      labels:
+        k8s-app: metrics-server
+    spec:
+      containers:
+      - name: metrics-server
+        image: registry.k8s.io/metrics-server/metrics-server:v0.7.1
+        args:
+          - --cert-dir=/tmp
+          - --secure-port=10250
+          - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+          - --kubelet-use-node-status-port
+          - --metric-resolution=15s
+          - --kubelet-insecure-tls
+        resources:
+          requests:
+            memory: "200Mi"
+            cpu: "0.2"
+          limits:
+            memory: "400Mi"
+            cpu: "0.3"
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 0
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
